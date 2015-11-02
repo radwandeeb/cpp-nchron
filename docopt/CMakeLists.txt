@@ -1,0 +1,1 @@
+add_library(docopt docopt_private.h docopt_util.h docopt_value.h docopt.cpp docopt.h)
