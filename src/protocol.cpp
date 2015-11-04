@@ -10,6 +10,7 @@
 #include "protocol_structures.h"
 
 #include <iostream>
+#include <iomanip>
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
@@ -44,6 +45,10 @@ Protocol::Protocol(std::string port)
     options.c_cflag |= CS8;
     options.c_cflag |= (CLOCAL | CREAD);
     tcsetattr(fd, TCSANOW, &options);
+
+    usleep(1000);
+    tcflush(fd,TCIOFLUSH);
+    usleep(1000);
 }
 
 Protocol::~Protocol()
@@ -82,38 +87,39 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
         uint8_t c;
         while(read(m_portfd, &c, 1) > 0)
         {
+            //std::cout << std::hex << "RX: x" << (int)c << std::endl;
             switch(state)
             {
             case DECODER_STATE_PREAMBLE_0:
-                std::cout << "DECODER_STATE_SYNC_0" << std::endl;
+                //std::cout << "DECODER_STATE_SYNC_0" << std::endl;
                 state = (c == (preamble & 0xFF)) ? DECODER_STATE_PREAMBLE_1 : DECODER_STATE_PREAMBLE_0;
                 break;
 
             case DECODER_STATE_PREAMBLE_1:
-                std::cout << "DECODER_STATE_SYNC_1" << std::endl;
+                //std::cout << "DECODER_STATE_SYNC_1" << std::endl;
                 state = (c == (preamble >> 8)) ? DECODER_STATE_CLASS_ID : DECODER_STATE_PREAMBLE_0;
                 break;
 
             case DECODER_STATE_CLASS_ID:
-                std::cout << "DECODER_STATE_CLASS_ID" << std::endl;
+                //std::cout << "DECODER_STATE_CLASS_ID" << std::endl;
                 packet->messageId = c;
                 state = DECODER_STATE_MSG_ID;
                 break;
 
             case DECODER_STATE_MSG_ID:
-                std::cout << "DECODER_STATE_MSG_ID" << std::endl;
+                //std::cout << "DECODER_STATE_MSG_ID" << std::endl;
                 packet->messageId += (c << 8);
                 state = DECODER_STATE_LENGTH_0;
                 break;
 
             case DECODER_STATE_LENGTH_0:
-                std::cout << "DECODER_STATE_LENGTH_0" << std::endl;
+                //std::cout << "DECODER_STATE_LENGTH_0" << std::endl;
                 packet->payloadLength = c;
                 state = DECODER_STATE_LENGTH_1;
                 break;
 
             case DECODER_STATE_LENGTH_1:
-                std::cout << "DECODER_STATE_LENGTH_1" << std::endl;
+                //std::cout << "DECODER_STATE_LENGTH_1" << std::endl;
                 packet->payloadLength += (c << 8);
                 payloadCounter = packet->payloadLength;
                 if(packet->payloadLength > 0)
@@ -127,7 +133,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
                 break;
 
             case DECODER_STATE_PAYLOAD:
-                std::cout << "DECODER_STATE_PAYLOAD" << std::endl;
+                //std::cout << "DECODER_STATE_PAYLOAD" << std::endl;
                 packet->payload[packet->payloadLength - payloadCounter--] = c;
                 if(payloadCounter == 0)
                 {
@@ -136,19 +142,18 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
                 break;
 
             case DECODER_STATE_CHECKSUM_0:
-                std::cout << "DECODER_STATE_CHECKSUM_0" << std::endl;
+                //std::cout << "DECODER_STATE_CHECKSUM_0" << std::endl;
                 packet->checksum = c;
                 state = DECODER_STATE_CHECKSUM_1;
                 break;
 
             case DECODER_STATE_CHECKSUM_1:
-                std::cout << "DECODER_STATE_CHECKSUM_1" << std::endl;
+                //std::cout << "DECODER_STATE_CHECKSUM_1" << std::endl;
                 packet->checksum += (c << 8);
                 state = DECODER_STATE_PREAMBLE_0;
                 isWholePacket = true;
                 break;
             }
-            return isWholePacket;
         }
     }
     return isWholePacket;
@@ -166,7 +171,7 @@ bool Protocol::sendMessage(packet_t *packet) const
     for(uint16_t i = 0; i < 6 + packet->payloadLength + 2; ++i)
     {
         int n = msg[i];
-        std::cout << "x" << std::hex <<  n << " ";
+        std::cout << "x" << std::hex << n << " ";
     }
     std::cout << std::endl;
 
@@ -206,6 +211,6 @@ uint16_t Protocol::calculateCheckSum(const packet_t *packet) const
         b = b + a;
     }
 
-    return (a << 8) + b;
+    return (b << 8) + a;
 }
 

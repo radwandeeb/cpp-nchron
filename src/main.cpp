@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iomanip>
 #include <ctime>
 
 #include "docopt.h"
@@ -54,8 +55,14 @@ int main(int argc, const char * argv[])
         struct tm *now = gmtime(&t);
 
         std::cout << "Host time: ";
-        std::cout << now->tm_year + 1900 << "-" << now->tm_mon + 1 << "-" << now->tm_mday << " "
-                  << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << " " << now->tm_zone<< std::endl;
+        std::cout << now->tm_year + 1900 
+        	<< "-" << std::setfill('0') << std::setw(2) << now->tm_mon + 1 
+        	<< "-" << std::setfill('0') << std::setw(2) << now->tm_mday 
+        	<< " " << std::setfill('0') << std::setw(2) << now->tm_hour 
+        	<< ":" << std::setfill('0') << std::setw(2) << now->tm_min 
+        	<< ":" << std::setfill('0') << std::setw(2) << now->tm_sec 
+        	<< " " << std::setfill('0') << std::setw(2) << now->tm_zone
+        	<< std::endl;
 
         if(arg_sync)
         {
@@ -83,9 +90,14 @@ int main(int argc, const char * argv[])
             if(prot.sendMsgTimUtcPoll(&timUtc))
             {
                 std::cout << "Read RTC successful!" << std::endl;
-                std::cout << "nChron time:" << std::endl;
-                std::cout << timUtc.year << "-" << timUtc.month << "-" << timUtc.day << " "
-                      << timUtc.hour << ":" << timUtc.min << ":" << timUtc.sec << std::endl;
+                std::cout << "nChron time: ";
+                std::cout << std::dec << (int)timUtc.year 
+                	<< "-" << std::setfill('0') << std::setw(2) << (int)timUtc.month 
+                	<< "-" << std::setfill('0') << std::setw(2) << (int)timUtc.day 
+                	<< " " << std::setfill('0') << std::setw(2) << (int)timUtc.hour 
+                	<< ":" << std::setfill('0') << std::setw(2) << (int)timUtc.min 
+                	<< ":" << std::setfill('0') << std::setw(2) << (int)timUtc.sec 
+                	<< std::endl;
             }
             else
             {

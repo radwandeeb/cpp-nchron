@@ -27,7 +27,7 @@ bool Protocol::sendMsgTimUtc(msgTimUtc_t msg) const
     packet.checksum = calculateCheckSum(&packet);
     sendMessage(&packet);
 
-    if(!getPacket(&packet, 20))
+    if(!getPacket(&packet, 200))
     {
         std::cout << "TIMEOUT!!!!" <<  std::endl;
         return false;
@@ -49,7 +49,7 @@ bool Protocol::sendMsgTimUtcPoll(msgTimUtc_t *msg) const
     packet.checksum = calculateCheckSum(&packet);
     sendMessage(&packet);
 
-    if(!getPacket(&packet, 20))
+    if(!getPacket(&packet, 200))
     {
         std::cout << "TIMEOUT!!!!" <<  std::endl;
         return false;
@@ -61,6 +61,6 @@ bool Protocol::sendMsgTimUtcPoll(msgTimUtc_t *msg) const
         return false;
     }
 
-    memcpy(&msg, packet.payload, sizeof(msgTimUtc_t));
+    memcpy(msg, packet.payload, sizeof(msgTimUtc_t));
     return true;
 }
