@@ -31,10 +31,22 @@ const uint16_t msg_id_nix_scr = 0x0802;
 const uint16_t msg_id_nix_tst = 0x0803;
 const uint16_t msg_id_nix_man = 0x0804;
 
-template<typename T> inline uint16_t getMsgId(T t) { return 0; }
-template<> inline uint16_t getMsgId<msgTimUtc_t>(msgTimUtc_t t) { return msg_id_tim_utc; }
-template<> inline uint16_t getMsgId<msgTimStd_t>(msgTimStd_t t) { return msg_id_tim_std; }
-template<> inline uint16_t getMsgId<msgTimDst_t>(msgTimDst_t t) { return msg_id_tim_dst; }
+template<typename T> inline uint16_t getMsgId(T t)
+{
+    return 0;
+}
+template<> inline uint16_t getMsgId<msgTimUtc_t>(msgTimUtc_t t)
+{
+    return msg_id_tim_utc;
+}
+template<> inline uint16_t getMsgId<msgTimStd_t>(msgTimStd_t t)
+{
+    return msg_id_tim_std;
+}
+template<> inline uint16_t getMsgId<msgTimDst_t>(msgTimDst_t t)
+{
+    return msg_id_tim_dst;
+}
 
 template<typename T>
 bool Protocol::sendMsg(T msg) const

@@ -63,7 +63,7 @@ Protocol::Protocol(std::string port)
     tcsetattr(fd, TCSANOW, &options);
 
     usleep(1000);
-    tcflush(fd,TCIOFLUSH);
+    tcflush(fd, TCIOFLUSH);
     usleep(1000);
 }
 
