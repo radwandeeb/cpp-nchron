@@ -21,55 +21,7 @@
 namespace protocol
 {
 
-const uint16_t preamble = 0x62B5;
-
-typedef enum
-{
-    DECODER_STATE_PREAMBLE_0 = 0,
-    DECODER_STATE_PREAMBLE_1,
-    DECODER_STATE_CLASS_ID,
-    DECODER_STATE_MSG_ID,
-    DECODER_STATE_LENGTH_0,
-    DECODER_STATE_LENGTH_1,
-    DECODER_STATE_PAYLOAD,
-    DECODER_STATE_CHECKSUM_0,
-    DECODER_STATE_CHECKSUM_1
-} decoderState_t;
-
-const uint16_t msg_id_cfg_sav = 0x0101;
-const uint16_t msg_id_cfg_msg = 0x0102;
-
-const uint16_t msg_id_tim_utc = 0x0201;
-const uint16_t msg_id_tim_std = 0x0202;
-const uint16_t msg_id_tim_dst = 0x0203;
-const uint16_t msg_id_tim_src = 0x0204;
-
-const uint16_t msg_id_nix_map = 0x0801;
-const uint16_t msg_id_nix_scr = 0x0802;
-const uint16_t msg_id_nix_tst = 0x0803;
-const uint16_t msg_id_nix_man = 0x0804;
-
-#define PAYLOAD_SIZE 0xFF
-
 #pragma pack(1)
-typedef struct
-{
-    uint16_t preamble;
-    uint16_t messageId;
-    uint16_t payloadLength;
-    uint8_t payload[PAYLOAD_SIZE];
-    uint16_t checksum;
-} packet_t;
-
-typedef struct
-{
-    uint8_t hour;
-    uint8_t dow;
-    uint8_t week;
-    uint8_t month;
-    uint16_t offset;
-} msgTimTrs_t;
-
 typedef struct
 {
     int32_t nano;
@@ -81,6 +33,24 @@ typedef struct
     uint8_t sec;
     uint8_t valid;
 } msgTimUtc_t;
+
+typedef struct
+{
+    uint8_t hour;
+    uint8_t dow;
+    uint8_t week;
+    uint8_t month;
+    uint16_t offset;
+} msgTimStd_t;
+
+typedef struct
+{
+    uint8_t hour;
+    uint8_t dow;
+    uint8_t week;
+    uint8_t month;
+    uint16_t offset;
+} msgTimDst_t;
 
 }
 

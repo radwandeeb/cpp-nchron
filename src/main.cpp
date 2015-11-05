@@ -74,7 +74,8 @@ int main(int argc, const char * argv[])
             timUtc.min = now->tm_min;
             timUtc.sec = now->tm_sec;
             timUtc.valid = true;
-            if(prot.sendMsgTimUtc(timUtc))
+
+            if(prot.sendMsg(timUtc))
             {
                 std::cout << "Sync RTC successful!" << std::endl;
             }
@@ -87,7 +88,7 @@ int main(int argc, const char * argv[])
         if(arg_read)
         {
             protocol::msgTimUtc_t timUtc;
-            if(prot.sendMsgTimUtcPoll(&timUtc))
+            if(prot.sendMsgPoll(&timUtc))
             {
                 std::cout << "Read RTC successful!" << std::endl;
                 std::cout << "nChron time: ";
@@ -119,7 +120,7 @@ int main(int argc, const char * argv[])
             timUtc.min = now->tm_min;
             timUtc.sec = now->tm_sec;
             timUtc.valid = true;
-            if(prot.sendMsgTimUtc(timUtc))
+            if(prot.sendMsg(timUtc))
             {
                 std::cout << "Set RTC to timestamp: " << tsul << " successful!" << std::endl;
             }

@@ -20,6 +20,22 @@
 
 using namespace protocol;
 
+typedef enum
+{
+    DECODER_STATE_PREAMBLE_0 = 0,
+    DECODER_STATE_PREAMBLE_1,
+    DECODER_STATE_CLASS_ID,
+    DECODER_STATE_MSG_ID,
+    DECODER_STATE_LENGTH_0,
+    DECODER_STATE_LENGTH_1,
+    DECODER_STATE_PAYLOAD,
+    DECODER_STATE_CHECKSUM_0,
+    DECODER_STATE_CHECKSUM_1
+} decoderState_t;
+
+const uint16_t preamble = 0x62B5;
+
+
 Protocol::Protocol(std::string port)
 {
     int fd;
@@ -121,6 +137,12 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
             case DECODER_STATE_LENGTH_1:
                 //std::cout << "DECODER_STATE_LENGTH_1" << std::endl;
                 packet->payloadLength += (c << 8);
+
+                if(packet->payloadLength > payloadSize)
+                {
+                    return false;
+                }
+
                 payloadCounter = packet->payloadLength;
                 if(packet->payloadLength > 0)
                 {
@@ -152,6 +174,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
                 packet->checksum += (c << 8);
                 state = DECODER_STATE_PREAMBLE_0;
                 isWholePacket = true;
+                //std::cout << std::dec << std::chrono::duration_cast<std::chrono::milliseconds>(d).count() << std::endl;
                 break;
             }
         }
@@ -161,7 +184,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
 
 bool Protocol::sendMessage(packet_t *packet) const
 {
-    uint8_t msg[PAYLOAD_SIZE];
+    uint8_t msg[payloadSize];
 
     memcpy(msg, packet, 6);
     memcpy(msg + 6, packet->payload, packet->payloadLength);
