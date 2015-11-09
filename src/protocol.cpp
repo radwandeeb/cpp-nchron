@@ -174,10 +174,11 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
                 packet->checksum += (c << 8);
                 state = DECODER_STATE_PREAMBLE_0;
                 isWholePacket = true;
-                //std::cout << std::dec << std::chrono::duration_cast<std::chrono::milliseconds>(d).count() << std::endl;
+                std::cout << "Took " << std::dec << std::chrono::duration_cast<std::chrono::milliseconds>(d).count() << "ms" << std::endl;
                 break;
             }
         }
+        usleep(1000);
     }
     return isWholePacket;
 }
