@@ -21,7 +21,7 @@ static const char USAGE[] =
 
     Usage:
         nchron (sync | read) all <port>
-        nchron (sync | read | set <timestamp>) rtc <port>
+        nchron (sync | read | set <timestamp>) rtc  <port>
         nchron (sync | read | set <timezone>) tz  <port>
         nchron (-h | --help)
         nchron --version
@@ -37,7 +37,7 @@ int main(int argc, const char * argv[])
     std::map<std::string, docopt::value> args = docopt::docopt(USAGE,
                                                     { argv + 1, argv + argc },
                                                     true,
-                                                    "nChron 0.1");
+                                                    "nChron 0.2");
 
     bool arg_all = args.find("all")->second.asBool();
     bool arg_rtc = args.find("rtc")->second.asBool();
@@ -79,7 +79,7 @@ int main(int argc, const char * argv[])
 
         if(arg_rtc || arg_all)
         {
-            if(arg_sync && arg_all)
+            if(arg_sync || arg_all)
             {
                 protocol::msgTimUtc_t timUtc;
                 timUtc.year = now->tm_year + 1900;
@@ -100,7 +100,7 @@ int main(int argc, const char * argv[])
                 }        
             }
 
-            if(arg_read && arg_all)
+            if(arg_read || arg_all)
             {
                 protocol::msgTimUtc_t timUtc;
                 if(prot.sendMsgPoll(&timUtc))
@@ -257,7 +257,7 @@ int main(int argc, const char * argv[])
                 }
             }
 
-            if(arg_read && arg_all)
+            if(arg_read || arg_all)
             {
                 protocol::msgTimStd_t timStd;
                 protocol::msgTimDst_t timDst;

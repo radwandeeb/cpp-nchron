@@ -52,33 +52,59 @@ typedef struct
     uint8_t month;
 } msgTimDst_t;
 
-typedef struct 
+typedef struct
 {
     uint32_t src;
     uint8_t mode;
 } msgTimSrc_t;
 
 
-typedef struct 
+typedef struct
 {
     uint32_t mapping;
 } msgNixMap_t;
 
-typedef struct 
+typedef struct
 {
     uint32_t interval;
     uint8_t type;
 } msgNixScr_t;
 
-typedef struct 
+typedef struct
 {
     uint8_t test;
 } msgNixTst_t;
 
-typedef struct 
+typedef struct
 {
     uint8_t reg[10];
 } msgNixMan_t;
+
+
+typedef struct
+{
+    uint8_t test;
+} msgFpdTst_t;
+
+typedef struct
+{
+    uint8_t type;
+} msgFpdTyp_t;
+
+typedef struct
+{
+    uint8_t mode;
+} msgFpdMod_t;
+
+typedef struct
+{
+    uint8_t reg[84];
+} msgFpdR12_t;
+
+typedef struct
+{
+    uint8_t reg[112];
+} msgFpdR16_t;
 
 }
 
