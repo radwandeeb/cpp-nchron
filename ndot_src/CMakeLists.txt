@@ -5,6 +5,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 SET(SOURCES
 	ndot.cpp
+	ndot_string.h
+	ndot_string.cpp
 )
  
 # add the binary tree to the search path for include files

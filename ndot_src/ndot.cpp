@@ -14,6 +14,8 @@
 
 #include "docopt.h"
 #include "protocol.h"
+#include "protocol_structures.h"
+#include "ndot_string.h"
 
 static const char USAGE[] =
     R"(nDot.
@@ -22,6 +24,8 @@ static const char USAGE[] =
         ndot test <port>
         ndot type (read | set <type>) <port>
         ndot mode (read | set <mode>) <port>
+        ndot string 84 <string> <port>
+        ndot string 112 <string> <port>
         ndot (-h | --help)
         ndot --version
 
@@ -29,7 +33,6 @@ static const char USAGE[] =
         -h --help   Show this screen.
         --version   Show version.
 )";
-
 
 int main(int argc, const char * argv[])
 {
@@ -45,8 +48,12 @@ int main(int argc, const char * argv[])
     bool arg_type = args.find("type")->second.asBool();
     bool arg_mode = args.find("mode")->second.asBool();
 
+    bool arg_string = args.find("string")->second.asBool();
+    bool arg_84 = args.find("84")->second.asBool();
+    bool arg_112 = args.find("112")->second.asBool();
 
-    if(arg_test || arg_type || arg_mode)
+
+    if(arg_test || arg_type || arg_mode || arg_string)
     {
         std::cout << "Connecting... ";
         protocol::Protocol prot(args.find("<port>")->second.asString());
@@ -137,6 +144,40 @@ int main(int argc, const char * argv[])
             {
                 std::cout << "Flipdot test raw failed..." << std::endl;
             }   
+        }
+
+        if(arg_string)
+        {
+            if(arg_84)
+            {
+                std::string s = args.find("<string>")->second.asString();
+                protocol::msgFpdR12_t fpdR12;
+                setString84x7(&fpdR12, s);
+
+                if(prot.sendMsg(fpdR12))
+                {
+                    std::cout << "Flipdot raw successful " << std::endl;
+                }
+                else
+                {
+                    std::cout << "Flipdot raw failed..." << std::endl;
+                }
+            }
+
+            if(arg_112)
+            {
+                std::string s = args.find("<string>")->second.asString();
+                protocol::msgFpdR16_t fpdR16;
+                setString112x16(&fpdR16, s);
+                if(prot.sendMsg(fpdR16))
+                {
+                    std::cout << "Flipdot raw successful " << std::endl;
+                }
+                else
+                {
+                    std::cout << "Flipdot raw failed..." << std::endl;
+                }
+            }
         }
     }
 

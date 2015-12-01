@@ -103,7 +103,7 @@ typedef struct
 
 typedef struct
 {
-    uint8_t reg[112];
+    uint16_t reg[112];
 } msgFpdR16_t;
 
 }

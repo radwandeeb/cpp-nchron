@@ -19,7 +19,7 @@
 namespace protocol
 {
 
-const uint16_t payloadSize = 0xFF;
+const uint16_t payloadSize = 0x5FF;
 
 #pragma pack(1)
 typedef struct
