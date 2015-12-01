@@ -38,14 +38,12 @@ int main(int argc, const char * argv[])
                                                     true,
                                                     "nDot 0.1");
 
-    bool arg_all = args.find("all")->second.asBool();
     bool arg_read = args.find("read")->second.asBool();
     bool arg_set = args.find("set")->second.asBool();
 
     bool arg_test = args.find("test")->second.asBool();
     bool arg_type = args.find("type")->second.asBool();
     bool arg_mode = args.find("mode")->second.asBool();
-    bool arg_flipdot = args.find("flipdot")->second.asBool();
 
 
     if(arg_test || arg_type || arg_mode)
@@ -71,7 +69,7 @@ int main(int argc, const char * argv[])
 
             if(arg_set)
             {
-                fpdTyp.type = (uint8_t)args.find("<type>")->second.asLong();
+                fpdTyp.type = (uint8_t)std::stoul(args.find("<type>")->second.asString());
                 if(prot.sendMsg(fpdTyp))
                 {
                     std::cout << "Set Flipdot type successful!" << std::endl;
@@ -79,6 +77,36 @@ int main(int argc, const char * argv[])
                 else
                 {
                     std::cout << "Set Flipdot type failed..." << std::endl;
+                }
+            }
+        }
+
+        if(arg_mode)
+        {
+            protocol::msgFpdMod_t fpdMod;
+            if(arg_read)
+            {
+                if(prot.sendMsgPoll(&fpdMod))
+                {
+                    std::cout << "Read Flipdot mode successful!" << std::endl;
+                    std::cout << (int)fpdMod.mode << std::endl;
+                }
+                else
+                {
+                    std::cout << "Read Flipdot mode failed..." << std::endl;
+                }
+            }
+
+            if(arg_set)
+            {
+                fpdMod.mode = (uint8_t)std::stoul(args.find("<mode>")->second.asString());
+                if(prot.sendMsg(fpdMod))
+                {
+                    std::cout << "Set Flipdot mode successful!" << std::endl;
+                }
+                else
+                {
+                    std::cout << "Set Flipdot mode failed..." << std::endl;
                 }
             }
         }
