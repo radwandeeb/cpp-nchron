@@ -149,6 +149,7 @@ const uint8_t font[128][6] =
 
 void setString84x7(protocol::msgFpdR12_t *d, std::string str);
 void setString112x16(protocol::msgFpdR16_t *d, std::string str);
+void setStringHighLow112x16(protocol::msgFpdR16_t *d, std::string strh, std::string strl);
 
 
 // ----------------------------------------------------------------------------
