@@ -7,3 +7,4 @@ add_subdirectory(protocol)
 
 add_subdirectory(nchron_src)
 add_subdirectory(ndot_src)
+add_subdirectory(nxie_src)

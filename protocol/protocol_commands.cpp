@@ -1,11 +1,3 @@
-//
-//  protocol.cpp
-//  nchron
-//
-//  Created by Janis on 26.05.15.
-//  Copyright (c) 2015 Janis. All rights reserved.
-//
-
 #include "protocol.h"
 #include "protocol_structures.h"
 
@@ -27,10 +19,11 @@ const uint16_t msg_id_tim_std = 0x0202;
 const uint16_t msg_id_tim_dst = 0x0203;
 const uint16_t msg_id_tim_src = 0x0204;
 
-const uint16_t msg_id_nix_map = 0x0801;
-const uint16_t msg_id_nix_scr = 0x0802;
+const uint16_t msg_id_nix_typ = 0x0801;
+const uint16_t msg_id_nix_mod = 0x0802;
 const uint16_t msg_id_nix_tst = 0x0803;
-const uint16_t msg_id_nix_raw = 0x0804;
+const uint16_t msg_id_nix_r4t = 0x0804;
+const uint16_t msg_id_nix_r6t = 0x0805;
 
 const uint16_t msg_id_fpd_typ = 0x0901;
 const uint16_t msg_id_fpd_mod = 0x0902;
@@ -53,6 +46,26 @@ template<> inline uint16_t getMsgId<msgTimStd_t>(msgTimStd_t t)
 template<> inline uint16_t getMsgId<msgTimDst_t>(msgTimDst_t t)
 {
     return msg_id_tim_dst;
+}
+template<> inline uint16_t getMsgId<msgNixTyp_t>(msgNixTyp_t t)
+{
+    return msg_id_nix_typ;
+}
+template<> inline uint16_t getMsgId<msgNixMod_t>(msgNixMod_t t)
+{
+    return msg_id_nix_mod;
+}
+template<> inline uint16_t getMsgId<msgNixTst_t>(msgNixTst_t t)
+{
+    return msg_id_nix_tst;
+}
+template<> inline uint16_t getMsgId<msgNixR4T_t>(msgNixR4T_t t)
+{
+    return msg_id_nix_r4t;
+}
+template<> inline uint16_t getMsgId<msgNixR6T_t>(msgNixR6T_t t)
+{
+    return msg_id_nix_r6t;
 }
 template<> inline uint16_t getMsgId<msgFpdTyp_t>(msgFpdTyp_t t)
 {
@@ -130,6 +143,9 @@ bool Protocol::sendMsgPoll(T *msg) const
 template bool Protocol::sendMsg<msgTimUtc_t>(msgTimUtc_t msg) const;
 template bool Protocol::sendMsg<msgTimStd_t>(msgTimStd_t msg) const;
 template bool Protocol::sendMsg<msgTimDst_t>(msgTimDst_t msg) const;
+template bool Protocol::sendMsg<msgNixTyp_t>(msgNixTyp_t msg) const;
+template bool Protocol::sendMsg<msgNixMod_t>(msgNixMod_t msg) const;
+template bool Protocol::sendMsg<msgNixTst_t>(msgNixTst_t msg) const;
 template bool Protocol::sendMsg<msgFpdTyp_t>(msgFpdTyp_t msg) const;
 template bool Protocol::sendMsg<msgFpdMod_t>(msgFpdMod_t msg) const;
 template bool Protocol::sendMsg<msgFpdTst_t>(msgFpdTst_t msg) const;
@@ -139,5 +155,7 @@ template bool Protocol::sendMsg<msgFpdR16_t>(msgFpdR16_t msg) const;
 template bool Protocol::sendMsgPoll<msgTimUtc_t>(msgTimUtc_t *msg) const;
 template bool Protocol::sendMsgPoll<msgTimStd_t>(msgTimStd_t *msg) const;
 template bool Protocol::sendMsgPoll<msgTimDst_t>(msgTimDst_t *msg) const;
+template bool Protocol::sendMsgPoll<msgNixTyp_t>(msgNixTyp_t *msg) const;
+template bool Protocol::sendMsgPoll<msgNixMod_t>(msgNixMod_t *msg) const;
 template bool Protocol::sendMsgPoll<msgFpdTyp_t>(msgFpdTyp_t *msg) const;
 template bool Protocol::sendMsgPoll<msgFpdMod_t>(msgFpdMod_t *msg) const;

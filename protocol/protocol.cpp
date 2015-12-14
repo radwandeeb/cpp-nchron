@@ -1,11 +1,3 @@
-//
-//  protocol.cpp
-//  nchron
-//
-//  Created by Janis on 26.05.15.
-//  Copyright (c) 2015 Janis. All rights reserved.
-//
-
 #include "protocol.h"
 #include "protocol_structures.h"
 
@@ -104,7 +96,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
         uint8_t c;
         while(read(m_portfd, &c, 1) > 0)
         {
-            //std::cout << std::hex << "RX: x" << (int)c << std::endl;
+            std::cout << std::hex << "RX: x" << (int)c << std::endl;
             switch(state)
             {
             case DECODER_STATE_PREAMBLE_0:

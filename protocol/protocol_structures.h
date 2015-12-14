@@ -61,14 +61,13 @@ typedef struct
 
 typedef struct
 {
-    uint32_t mapping;
-} msgNixMap_t;
+    uint8_t type;
+} msgNixTyp_t;
 
 typedef struct
 {
-    uint32_t interval;
-    uint8_t type;
-} msgNixScr_t;
+    uint8_t mode;
+} msgNixMod_t;
 
 typedef struct
 {
@@ -77,8 +76,13 @@ typedef struct
 
 typedef struct
 {
-    uint8_t reg[10];
-} msgNixMan_t;
+    uint8_t reg[6];
+} msgNixR4T_t;
+
+typedef struct
+{
+    uint8_t reg[8];
+} msgNixR6T_t;
 
 
 typedef struct
