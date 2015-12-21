@@ -3,13 +3,13 @@
 
 #include <iostream>
 #include <iomanip>
-#include <fcntl.h>
-#include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <chrono>
+
+#include "serial.h"
 
 using namespace protocol;
 
@@ -30,39 +30,14 @@ const uint16_t preamble = 0x62B5;
 
 
 Protocol::Protocol(std::string port)
+    : m_serial(port, 115200)
 {
-    int fd;
-    fd = open(port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
-    if (fd == -1)
-    {
-        std::cerr << "ERROR... Unable to open port" << std::endl;
-        abort();
-    }
-    else
-    {
-        std::cout << "Port opened" << std::endl;
-        m_portfd = fd;
-    }
 
-    struct termios options;
-    tcgetattr(fd, &options);
-    cfsetispeed(&options, B115200);
-    cfsetospeed(&options, B115200);
-    options.c_cflag &= ~PARENB;
-    options.c_cflag &= ~CSTOPB;
-    options.c_cflag &= ~CSIZE;
-    options.c_cflag |= CS8;
-    options.c_cflag |= (CLOCAL | CREAD);
-    tcsetattr(fd, TCSANOW, &options);
-
-    usleep(1000);
-    tcflush(fd, TCIOFLUSH);
-    usleep(1000);
 }
 
 Protocol::~Protocol()
 {
-    close(m_portfd);
+
 }
 
 void Protocol::populateHeader(packet_t *packet,
@@ -74,7 +49,7 @@ void Protocol::populateHeader(packet_t *packet,
     packet->payloadLength = payloadLength;
 }
 
-bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
+bool Protocol::getPacket(packet_t *packet, uint32_t timeout)
 {
     decoderState_t state = DECODER_STATE_PREAMBLE_0;
     uint8_t payloadCounter = 0;
@@ -94,7 +69,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
         }
 
         uint8_t c;
-        while(read(m_portfd, &c, 1) > 0)
+        while(m_serial.read(&c) > 0)
         {
             std::cout << std::hex << "RX: x" << (int)c << std::endl;
             switch(state)
@@ -176,7 +151,7 @@ bool Protocol::getPacket(packet_t *packet, uint32_t timeout) const
     return isWholePacket;
 }
 
-bool Protocol::sendMessage(packet_t *packet) const
+bool Protocol::sendMessage(packet_t *packet)
 {
     uint8_t msg[payloadSize];
 
@@ -192,10 +167,7 @@ bool Protocol::sendMessage(packet_t *packet) const
     }
     std::cout << std::endl;
 
-    if(m_portfd)
-    {
-        write(m_portfd, msg, 6 + packet->payloadLength + 2);
-    }
+    m_serial.write(msg, 6 + packet->payloadLength + 2);
     return true;
 }
 

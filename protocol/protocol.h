@@ -15,6 +15,7 @@
 
 #include "stdint.h"
 #include "protocol_structures.h"
+#include "serial.h"
 
 namespace protocol
 {
@@ -41,21 +42,21 @@ public:
     bool poll();
 
     template<typename T>
-    bool sendMsg(T msg) const;
+    bool sendMsg(T msg);
 
     template<typename T>
-    bool sendMsgPoll(T *msg) const;
+    bool sendMsgPoll(T *msg);
 
 private:
-    bool sendMessage(packet_t *packet) const;
+    bool sendMessage(packet_t *packet);
     uint16_t calculateCheckSum(const packet_t *packet) const;
     bool checkPacket(const packet_t *packet) const;
-    bool getPacket(packet_t *packet, uint32_t timeout) const;
+    bool getPacket(packet_t *packet, uint32_t timeout);
     bool evaluatePacket(packet_t *packet);
     void populateHeader(packet_t *packet, const uint16_t messageId, const uint16_t payloadLength) const;
 
     std::string m_buffer;
-    int m_portfd;
+    SerialInterface m_serial;
 
     uint16_t m_lastMsgId;
 };

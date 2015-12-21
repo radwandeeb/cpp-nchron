@@ -2,8 +2,6 @@
 #include "protocol_structures.h"
 
 #include <iostream>
-#include <fcntl.h>
-#include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -89,7 +87,7 @@ template<> inline uint16_t getMsgId<msgFpdR16_t>(msgFpdR16_t t)
 }
 
 template<typename T>
-bool Protocol::sendMsg(T msg) const
+bool Protocol::sendMsg(T msg)
 {
     uint16_t msg_id = getMsgId(msg);
 
@@ -115,7 +113,7 @@ bool Protocol::sendMsg(T msg) const
 }
 
 template<typename T>
-bool Protocol::sendMsgPoll(T *msg) const
+bool Protocol::sendMsgPoll(T *msg)
 {
     uint16_t msg_id = getMsgId(*msg);
 
@@ -140,22 +138,22 @@ bool Protocol::sendMsgPoll(T *msg) const
     return true;
 }
 
-template bool Protocol::sendMsg<msgTimUtc_t>(msgTimUtc_t msg) const;
-template bool Protocol::sendMsg<msgTimStd_t>(msgTimStd_t msg) const;
-template bool Protocol::sendMsg<msgTimDst_t>(msgTimDst_t msg) const;
-template bool Protocol::sendMsg<msgNixTyp_t>(msgNixTyp_t msg) const;
-template bool Protocol::sendMsg<msgNixMod_t>(msgNixMod_t msg) const;
-template bool Protocol::sendMsg<msgNixTst_t>(msgNixTst_t msg) const;
-template bool Protocol::sendMsg<msgFpdTyp_t>(msgFpdTyp_t msg) const;
-template bool Protocol::sendMsg<msgFpdMod_t>(msgFpdMod_t msg) const;
-template bool Protocol::sendMsg<msgFpdTst_t>(msgFpdTst_t msg) const;
-template bool Protocol::sendMsg<msgFpdR12_t>(msgFpdR12_t msg) const;
-template bool Protocol::sendMsg<msgFpdR16_t>(msgFpdR16_t msg) const;
+template bool Protocol::sendMsg<msgTimUtc_t>(msgTimUtc_t msg);
+template bool Protocol::sendMsg<msgTimStd_t>(msgTimStd_t msg);
+template bool Protocol::sendMsg<msgTimDst_t>(msgTimDst_t msg);
+template bool Protocol::sendMsg<msgNixTyp_t>(msgNixTyp_t msg);
+template bool Protocol::sendMsg<msgNixMod_t>(msgNixMod_t msg);
+template bool Protocol::sendMsg<msgNixTst_t>(msgNixTst_t msg);
+template bool Protocol::sendMsg<msgFpdTyp_t>(msgFpdTyp_t msg);
+template bool Protocol::sendMsg<msgFpdMod_t>(msgFpdMod_t msg);
+template bool Protocol::sendMsg<msgFpdTst_t>(msgFpdTst_t msg);
+template bool Protocol::sendMsg<msgFpdR12_t>(msgFpdR12_t msg);
+template bool Protocol::sendMsg<msgFpdR16_t>(msgFpdR16_t msg);
 
-template bool Protocol::sendMsgPoll<msgTimUtc_t>(msgTimUtc_t *msg) const;
-template bool Protocol::sendMsgPoll<msgTimStd_t>(msgTimStd_t *msg) const;
-template bool Protocol::sendMsgPoll<msgTimDst_t>(msgTimDst_t *msg) const;
-template bool Protocol::sendMsgPoll<msgNixTyp_t>(msgNixTyp_t *msg) const;
-template bool Protocol::sendMsgPoll<msgNixMod_t>(msgNixMod_t *msg) const;
-template bool Protocol::sendMsgPoll<msgFpdTyp_t>(msgFpdTyp_t *msg) const;
-template bool Protocol::sendMsgPoll<msgFpdMod_t>(msgFpdMod_t *msg) const;
+template bool Protocol::sendMsgPoll<msgTimUtc_t>(msgTimUtc_t *msg);
+template bool Protocol::sendMsgPoll<msgTimStd_t>(msgTimStd_t *msg);
+template bool Protocol::sendMsgPoll<msgTimDst_t>(msgTimDst_t *msg);
+template bool Protocol::sendMsgPoll<msgNixTyp_t>(msgNixTyp_t *msg);
+template bool Protocol::sendMsgPoll<msgNixMod_t>(msgNixMod_t *msg);
+template bool Protocol::sendMsgPoll<msgFpdTyp_t>(msgFpdTyp_t *msg);
+template bool Protocol::sendMsgPoll<msgFpdMod_t>(msgFpdMod_t *msg);
